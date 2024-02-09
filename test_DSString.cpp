@@ -9,8 +9,11 @@
 int main()
 {  
     DSString myString = "Hello, World!";
-    std::cout << myString << "\n";
+    //std::cout << myString << "\n";
 
+    DSString copied(myString); //test copy constructor
+
+/*
     // this uses the one argument constructor in DSString and then the inherited operator=
     myString = "Good bye!";
     std::cout << myString << "\n";
@@ -56,6 +59,10 @@ int main()
     // the data structure is sorted. Now we can do more efficient search using STL binary search
     std::cout << "found ddd: " << binary_search(strings.begin(), strings.end(), DSString("ddd")) << "\n";
     std::cout << "found z: " << binary_search(strings.begin(), strings.end(), DSString("z")) << "\n";
+
+
+*/
+
 
     return 0;
 }

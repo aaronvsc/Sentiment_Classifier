@@ -9,11 +9,13 @@
 int main()
 {  
     DSString myString = "Hello, World!";
+
+    std::cout << myString << "\n";
+
+    std::vector<DSString> tokens = myString.tokenize(myString);
+
     //std::cout << myString << "\n";
 
-    DSString copied(myString); //test copy constructor
-
-/*
     // this uses the one argument constructor in DSString and then the inherited operator=
     myString = "Good bye!";
     std::cout << myString << "\n";
@@ -61,7 +63,7 @@ int main()
     std::cout << "found z: " << binary_search(strings.begin(), strings.end(), DSString("z")) << "\n";
 
 
-*/
+
 
 
     return 0;

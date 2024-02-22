@@ -9,35 +9,34 @@
 #define DSSTRING_H
 
 #include <iostream>
+#include <vector>
 
-class DSString
-{
-
-private:
-    char *data; // a pointer to a character array containing the string with a `\0` terminator
-    size_t len; // the length of the string (without the terminator)
+class DSString {
+   private:
+    char *data;  // a pointer to a character array containing the string with a `\0` terminator
+    size_t len;  // the length of the string (without the terminator)
     // Note: we keep the terminator only so we can return a c-string version in function c_str().
 
-public:
+   public:
     /**
      * Make sure you implement the rule-of-three and use proper memory management.
      * To help you get started, you can implement the following:
      **/
 
     DSString();
-    DSString(const char *); // constructor that converts a cstring
+    DSString(const char *);  // constructor that converts a cstring
     // you can also provide  DSString(const std::string &); for std::string
 
     // Rule of three is needed if dynamic memory allocation is used
-    DSString(const DSString &);            // copy constructor
-    ~DSString();                           // destructor
-    DSString &operator=(const DSString &); // assignment operator
+    DSString(const DSString &);             // copy constructor
+    ~DSString();                            // destructor
+    DSString &operator=(const DSString &);  // assignment operator
 
     // you can also implement the move versions for the big 5 (C+11)
 
-    size_t length() const; // returns the length of the string
+    size_t length() const;  // returns the length of the string
 
-    char &operator[](size_t); // returns a reference to the character at the given index
+    char &operator[](size_t);  // returns a reference to the character at the given index
 
     /**
      * Overloaded operator+ which appends the string in the argument to this string
@@ -67,14 +66,21 @@ public:
      *
      * @return DSString
      */
-    DSString toLower() const; // look at the ASCII table for this!
+    DSString toLower() const;  // look at the ASCII table for this!
 
     /**
      * the c_str function returns a pointer a null-terminated c-string holding the
      * contents of this object. Since data already has a `\0`
      * at the end of the string in DSString so you can just return a pointer to data.
      **/
+    
     char *c_str() const;
+
+
+    bool isEmpty() const;
+
+    std::vector<DSString> tokenize(const DSString &tweet);
+
 
     // a conversion to std::string would also be nice: string string() const;
 

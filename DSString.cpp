@@ -1,5 +1,7 @@
 #include "DSString.h"
 
+#include <vector>
+
 // Constructor: initialize locals w/ values
 DSString::DSString() {
     data = nullptr;
@@ -20,9 +22,6 @@ DSString::DSString(const char *str) {
         data[i] = str[i];
     }
     data[len] = '\0';
-
-    // 3. fix length of newly created c string to include '\0'
-    len++;
 }
 
 // copy constructor, copies from rhs to data
@@ -70,7 +69,7 @@ DSString DSString::operator+(const DSString &rhs) const {
     DSString combined;  // DSString to return
 
     combined.len = len + rhs.len;
-    combined.data = new char[combined.len + 1];  // DELETE THIS NOTE: is +1 necessary here?
+    combined.data = new char[combined.len + 1];
 
     size_t i = 0;
     // copy first string's data to combined DSString
@@ -101,57 +100,92 @@ bool DSString::operator==(const DSString &rhs) const {
 }
 
 bool DSString::operator<(const DSString &rhs) const {
-    size_t minLen = std::min(len, rhs.len); //find max length/index comparable
+    size_t minLen = std::min(len, rhs.len);  // find max length/index comparable
     for (size_t i = 0; i < minLen; i++) {
         if (data[i] != rhs.data[i]) {
-            return data[i] < rhs.data[i]; //returns true by character comparison
+            return data[i] < rhs.data[i];  // returns true by character comparison
         }
     }
-    return len < rhs.len; //returns true if length is less than rhs (prefixes)
+    return len < rhs.len;  // returns true if length is less than rhs (prefixes)
 }
 
- DSString DSString::substring(size_t start, size_t numChars) const{
+DSString DSString::substring(size_t start, size_t numChars) const {
     // check start index
-    if (start >= len){
+    if (start >= len) {
         return DSString();
     }
-    numChars = std::min(numChars, len - start); //checking numChars
+    numChars = std::min(numChars, len - start);  // checking numChars
     DSString sub;
     sub.len = numChars;
-    sub.data = new char[numChars + 1];
-    //copies from starting index
-    for (size_t i = 0; i < numChars; i++){
+    sub.data = new char[numChars]; //not accounting for null terminator
+    // copies from starting index
+    for (size_t i = 0; i < numChars; i++) {
         sub.data[i] = data[start + i];
     }
-    sub.data[numChars] = '\0';
-    return sub;
- }
 
- DSString DSString::toLower() const{
+    //sub.data[numChars] = '\0';
+    return sub;
+}
+
+DSString DSString::toLower() const {
     DSString lower;
     lower.len = len;
     lower.data = new char[len + 1];
-    for (size_t i = 0; i < len; i++){
+    for (size_t i = 0; i < len; i++) {
         // check upercase letter by ASCII range
-        if (data[i] >= 'A' && data[i] <= 'Z'){
-            lower.data[i] = lower[i] + ('a' - 'A'); // convert to lowercase
-        }
-        else{
+        if (data[i] >= 'A' && data[i] <= 'Z') {
+            lower.data[i] = data[i] + 32;  // convert to lowercase
+        } else {
             lower.data[i] = data[i];
         }
     }
     lower.data[len] = '\0';
     return lower;
+}
 
- }
-
-char * DSString::c_str() const{
+char *DSString::c_str() const {
     return data;
 }
 
-std::ostream &operator<<(std::ostream& os, const DSString &str){
+// Check if the string is empty
+bool DSString::isEmpty() const {
+    return len == 0;
+}
+
+std::ostream &operator<<(std::ostream &os, const DSString &str) {
     os << str.data;
     return os;
+}
+
+std::vector<DSString> DSString::tokenize(const DSString &tweet) {
+    std::vector<DSString> tokens;
+
+    // Make the tweet lowercase
+    DSString lowercaseTweet = tweet.toLower();
+
+    // Clean the tweet and tokenize
+    DSString word;
+    for (size_t i = 0; i < lowercaseTweet.length(); ++i) {
+        char c = lowercaseTweet[i];
+        // Check if the character is alphanumeric or space
+        if ((c >= 'a' && c <= 'z') || c == ' ') {
+            // if there is a space and the word isn't empty insert the new word into tokens
+            if (c == ' ' && !word.isEmpty()) {
+                tokens.push_back(word);
+                word = "";
+                // else add the character to the current word
+            } else {
+                DSString temp = DSString(&c);
+                word = word + temp.substring(0,1);
+            }
+        }
+    }
+    // if there is a word by the end of the tweet then tokenize it
+    if (!word.isEmpty()) {
+        tokens.push_back(word);
+    }
+
+    return tokens;
 }
 
 /*

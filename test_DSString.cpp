@@ -9,7 +9,12 @@
 int main()
 {  
     DSString myString = "Hello, World!";
+
     std::cout << myString << "\n";
+
+    std::vector<DSString> tokens = myString.tokenize(myString);
+
+    //std::cout << myString << "\n";
 
     // this uses the one argument constructor in DSString and then the inherited operator=
     myString = "Good bye!";
@@ -56,6 +61,10 @@ int main()
     // the data structure is sorted. Now we can do more efficient search using STL binary search
     std::cout << "found ddd: " << binary_search(strings.begin(), strings.end(), DSString("ddd")) << "\n";
     std::cout << "found z: " << binary_search(strings.begin(), strings.end(), DSString("z")) << "\n";
+
+
+
+
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #include "DSString.h"
-
+#include <vector>
+#include <iostream>
 #include <vector>
 
 // Constructor: initialize locals w/ values

@@ -1,7 +1,6 @@
 #include "DSString.h"
 #include <vector>
 #include <iostream>
-#include <vector>
 
 // Constructor: initialize locals w/ values
 DSString::DSString() {
@@ -158,11 +157,11 @@ std::ostream &operator<<(std::ostream &os, const DSString &str) {
     return os;
 }
 
-std::vector<DSString> DSString::tokenize(const DSString &tweet) {
+std::vector<DSString> DSString::tokenize() {
     std::vector<DSString> tokens;
 
     // Make the tweet lowercase
-    DSString lowercaseTweet = tweet.toLower();
+    DSString lowercaseTweet = this->toLower();
 
     // Clean the tweet and tokenize
     DSString word;

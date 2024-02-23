@@ -1,29 +1,25 @@
 #include "SentimentClassifier.h"
 
-
-SentimentClassifier::SentimentClassifier(){
-
+SentimentClassifier::SentimentClassifier() {
 }
 
-void SentimentClassifier::train(const char* train_dataset_20k){
-
+void SentimentClassifier::train(const char* train_dataset_20k) {
     std::ifstream file(train_dataset_20k);
 
-    if(!file.is_open()){
-    std::cerr << "Error: Cannot open file" << train_dataset_20k << std::endl;
-    return;
+    //check open file
+    if (!file.is_open()) {
+        std::cerr << "Error: Cannot open file" << train_dataset_20k << std::endl;
+        return;
     }
 
-    // Skip the first line
     std::string line;
     std::getline(file, line);
-
-    // Process the rest of the file
+    // Read the rest of the file
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string token;
 
-        // Read the sentiment (first value)
+        // Read the sentiment
         std::getline(iss, token, ',');
         int sentiment = std::stoi(token);
 
@@ -35,18 +31,19 @@ void SentimentClassifier::train(const char* train_dataset_20k){
         // Read the tweet text (everything after the fourth comma)
         std::getline(iss, token);
 
-        // Tokenize the tweet text and update sentimentsOfWords
+        // Tokenize the tweet
         DSString tweet(token.c_str());
         std::vector<DSString> tokens = tweet.tokenize();
+
+        //add word to map annd +/- to word based on sentiment
         for (const auto& word : tokens) {
-            sentimentsOfWords[word] += (sentiment == 4) ? 1 : -1;
+            if (sentiment == 4) {
+                sentimentsOfWords[word]++;
+            } else {
+                sentimentsOfWords[word]--;
+            }
         }
     }
 
     file.close();
-
 }
-
-
-
-

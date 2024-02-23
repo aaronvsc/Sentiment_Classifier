@@ -47,3 +47,12 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
 
     file.close();
 }
+
+int SentimentClassifier::findSentiment(const DSString& word) const {
+    auto it = sentimentsOfWords.find(word);
+    if (it != sentimentsOfWords.end()) {
+        return it->second; // returns element at key
+    } else {
+        return 0;  // assuming sentiment of 0 for words not found
+    }
+}

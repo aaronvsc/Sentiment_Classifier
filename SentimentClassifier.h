@@ -22,7 +22,11 @@ public:
 SentimentClassifier();
 
 void train(const char* train_dataset_20k);
+
+int findSentiment(const DSString& word) const;
+
 void predict(char* test_dataset_10k, char* test_dataset_sentiment_10k, char* results, char* accuracy);
+
 void evaluate(char* test_dataset_sentiment_10k, char* results, char* accuracy);
 
 };

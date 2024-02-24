@@ -4,9 +4,10 @@
 Tweet::Tweet() {}
 
 // Constructor with parameters
-Tweet::Tweet(const DSString& tweetID, DSString& text) {
+Tweet::Tweet(const DSString& tweetID, DSString& text, int sentiment) {
     this->tweetID = tweetID;
     this->text = text;
+    this->sentiment = sentiment;
 }
 
 // Getter for tweet ID

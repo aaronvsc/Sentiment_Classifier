@@ -12,7 +12,7 @@ private:
 public:
     // Constructors
     Tweet();
-    Tweet(const DSString& tweetID, DSString& text);
+    Tweet(const DSString& tweetID, DSString& text, int sentiment=0);
 
     // Getters
     DSString getTweetID() const;

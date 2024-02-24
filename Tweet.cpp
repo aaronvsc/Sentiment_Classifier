@@ -30,8 +30,7 @@ void Tweet::setSentiment(int sentiment) {
 }
 
 // Tokenize the tweet text
-std::vector<DSString> tokenizeTweet(Tweet& tweet) {
-    DSString tweetText = tweet.getText();
-    return tweetText.tokenize();
+std::vector<DSString> Tweet::tokenizeTweet() {
+    return text.tokenize();
 }
 

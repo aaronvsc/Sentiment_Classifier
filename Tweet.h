@@ -22,7 +22,7 @@ public:
     // Setters
     void setSentiment(int sentiment);
 
-    std::vector<DSString> tokenize(Tweet& tweet);
+    std::vector<DSString> tokenizeTweet();
 };
 
 #endif // TWEET_H

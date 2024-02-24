@@ -1,23 +1,21 @@
 #include <iostream>
+
 #include "DSString.h"
 #include "SentimentClassifier.h"
 
+int main(int argc, char** argv) {
+    if (argc != 6) {
+        std::cerr << "Incorrect number of arguements" << std::endl;
+        return 1;  // Return error code 1
+    }
 
-int main(int argc, char** argv)
-{  
-    std::cout << "I will be a sentiment analyzer!" << std::endl;
+    SentimentClassifier test;
 
-// USE arrows on UML
-// use a map to iterate through tweets and populate the map with keywords
-// then look at the sentiment associated with the tweet and ++/-- the value of keyword
-// this map is a private variable of sentiment analyzer
-// dont forget to pass filenames as char*, dont need to open file in main
-//
-//
+    test.train(argv[1]);
 
+    test.predict(argv[2], argv[4]);
 
-
-
+    test.evaluate(argv[3], argv[4], argv[5]);
 
     return 0;
 }

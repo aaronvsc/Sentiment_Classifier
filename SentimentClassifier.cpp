@@ -1,7 +1,6 @@
 #include "SentimentClassifier.h"
 
-SentimentClassifier::SentimentClassifier() {
-}
+SentimentClassifier::SentimentClassifier() {}
 
 void SentimentClassifier::train(const char* train_dataset_20k) {
     std::ifstream file(train_dataset_20k);
@@ -23,8 +22,11 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
         std::getline(iss, token, ',');
         int sentiment = std::stoi(token);
 
-        // Skip the tweet id
-        std::getline(iss, token, ',');
+        // Skip the tweet id, date, query status, and username
+        for (int i = 0; i < 3; ++i) {
+            std::getline(iss, token, ',');
+        }
+
 
         // Read the tweet text (everything after the comma)
         std::getline(iss, token);
@@ -95,7 +97,7 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
 
         // Extract tweet text
         std::string stringText;
-        std::getline(tweetStream, stringText, ',');
+        std::getline(tweetStream, stringText);
 
         // Convert tweetID and tweetText to DSStrings
         DSString tweetID(stringID.c_str());

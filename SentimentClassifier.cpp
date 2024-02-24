@@ -131,3 +131,64 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
     testDataFile.close();
     resultsFile.close();
 }
+
+void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* results, char* accuracy) {
+    std::ifstream testFile(test_dataset_sentiment_10k);
+    std::ifstream resultFile(results);
+    std::ofstream accuracyFile(accuracy);
+
+    if (!testFile.is_open() || !resultFile.is_open() || !accuracyFile.is_open()) {
+        std::cerr << "Error: Cannot open files" << std::endl;
+        return;
+    }
+
+    // Skip the first line of each file
+    std::string testLine, resultsLine;
+    std::getline(testFile, testLine);
+    std::getline(resultFile, resultsLine);
+
+    int totalTweets = 0;
+    int correctPredictions = 0;
+
+    // Process the rest of the files
+    while (std::getline(testFile, testLine) && std::getline(resultFile, resultsLine)) {
+        // Extract predicted sentiment from results file
+        int predictedSentiment;
+        std::istringstream resultStream(resultsLine);
+        std::string token;
+        std::getline(resultStream, token, ',');
+        predictedSentiment = std::stoi(token);
+
+        // Extract ground truth sentiment from ground truth file
+        int groundTruthSentiment;
+        std::istringstream truthStream(testLine);
+        std::getline(truthStream, token, ',');
+        groundTruthSentiment = std::stoi(token);
+
+        DSString tweetID;
+        std::string tweetIDString;
+        std::getline(resultStream, tweetIDString, ',');
+        tweetID = DSString(tweetIDString.c_str());
+
+        // Check if prediction matches ground truth
+        if (predictedSentiment == groundTruthSentiment) {
+            correctPredictions++;
+        } else {
+            // Write incorrectly classified tweet to accuracy file
+            accuracyFile << predictedSentiment << ", " << groundTruthSentiment << ", " << tweetID << std::endl;
+        }
+
+        totalTweets++;
+    }
+
+    // Calculate accuracy
+    double accuracyDecimal = (static_cast<double>(correctPredictions) / totalTweets);
+
+    // Write accuracy to accuracy file
+    accuracyFile << std::fixed << std::setprecision(2) << accuracyDecimal << std::endl;
+
+    // Close the files
+    testFile.close();
+    resultFile.close();
+    accuracyFile.close();
+}

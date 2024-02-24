@@ -8,6 +8,9 @@
 #ifndef DSSTRING_H
 #define DSSTRING_H
 
+#include <vector>
+#include <iostream>
+
 
 class DSString {
    private:
@@ -77,7 +80,7 @@ class DSString {
 
     bool isEmpty() const;
 
-    std::vector<DSString> tokenize(const DSString &tweet);
+    std::vector<DSString> tokenize();
 
 
     // a conversion to std::string would also be nice: string string() const;

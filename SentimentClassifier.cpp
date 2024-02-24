@@ -3,33 +3,33 @@
 SentimentClassifier::SentimentClassifier() {}
 
 void SentimentClassifier::train(const char* train_dataset_20k) {
-    std::ifstream file(train_dataset_20k);
+    std::ifstream train(train_dataset_20k);
 
-    if (!file.is_open()) {
+    if (!train.is_open()) {
         std::cerr << "Error: Cannot open file " << train_dataset_20k << std::endl;
         return;
     }
 
     std::string line;
-    std::getline(file, line);  // Skip the header line
+    std::getline(train, line);  // Skip the header line
 
     // Read the rest of the file
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+    while (std::getline(train, line)) {
+        std::istringstream trainStream(line);
         std::string token;
 
         // Read the sentiment
-        std::getline(iss, token, ',');
+        std::getline(trainStream, token, ',');
         int sentiment = std::stoi(token);
 
         // Skip the tweet id, date, query status, and username
         for (int i = 0; i < 3; ++i) {
-            std::getline(iss, token, ',');
+            std::getline(trainStream, token, ',');
         }
 
 
         // Read the tweet text (everything after the comma)
-        std::getline(iss, token);
+        std::getline(trainStream, token);
         DSString tweetText(token.c_str());
 
         // Create a Tweet object
@@ -48,7 +48,7 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
         }
     }
 
-    file.close();
+    train.close();
 }
 
 // finds sentiment of word in map
@@ -116,15 +116,14 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
         }
 
         // Determine sentiment label based on combined score
-        int sentimentLabel;
         if (combinedScore >= 0) {
-            sentimentLabel = 4;
+            currTweet.setSentiment(4);
         } else {
-            sentimentLabel = 0;
+            currTweet.setSentiment(0);
         }
 
         // Write the sentiment label and tweet ID to the results file
-        resultsFile << sentimentLabel << "," << currTweet.getTweetID() << std::endl;
+        resultsFile << currTweet.getSentiment() << "," << currTweet.getTweetID() << std::endl;
     }
 
     // Close the files
@@ -133,25 +132,24 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
 }
 
 void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* results, char* accuracy) {
-    std::ifstream testFile(test_dataset_sentiment_10k);
+    std::ifstream truthFile(test_dataset_sentiment_10k);
     std::ifstream resultFile(results);
     std::ofstream accuracyFile(accuracy);
 
-    if (!testFile.is_open() || !resultFile.is_open() || !accuracyFile.is_open()) {
+    if (!truthFile.is_open() || !resultFile.is_open() || !accuracyFile.is_open()) {
         std::cerr << "Error: Cannot open files" << std::endl;
         return;
     }
 
     // Skip the first line of each file
-    std::string testLine, resultsLine;
-    std::getline(testFile, testLine);
-    std::getline(resultFile, resultsLine);
+    std::string truthLine, resultsLine;
+    std::getline(truthFile, truthLine);
 
     int totalTweets = 0;
     int correctPredictions = 0;
 
     // Process the rest of the files
-    while (std::getline(testFile, testLine) && std::getline(resultFile, resultsLine)) {
+    while (std::getline(truthFile, truthLine) && std::getline(resultFile, resultsLine)) {
         // Extract predicted sentiment from results file
         int predictedSentiment;
         std::istringstream resultStream(resultsLine);
@@ -161,7 +159,7 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
 
         // Extract ground truth sentiment from ground truth file
         int groundTruthSentiment;
-        std::istringstream truthStream(testLine);
+        std::istringstream truthStream(truthLine);
         std::getline(truthStream, token, ',');
         groundTruthSentiment = std::stoi(token);
 
@@ -188,7 +186,7 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
     accuracyFile << std::fixed << std::setprecision(2) << accuracyDecimal << std::endl;
 
     // Close the files
-    testFile.close();
+    truthFile.close();
     resultFile.close();
     accuracyFile.close();
 }

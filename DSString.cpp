@@ -1,6 +1,7 @@
 #include "DSString.h"
-#include <vector>
+
 #include <iostream>
+#include <vector>
 
 // Constructor: initialize locals w/ values
 DSString::DSString() {
@@ -117,13 +118,13 @@ DSString DSString::substring(size_t start, size_t numChars) const {
     numChars = std::min(numChars, len - start);  // checking numChars
     DSString sub;
     sub.len = numChars;
-    sub.data = new char[numChars]; //not accounting for null terminator
+    sub.data = new char[numChars];  // not accounting for null terminator
     // copies from starting index
     for (size_t i = 0; i < numChars; i++) {
         sub.data[i] = data[start + i];
     }
 
-    //sub.data[numChars] = '\0';
+    // sub.data[numChars] = '\0';
     return sub;
 }
 
@@ -157,6 +158,30 @@ std::ostream &operator<<(std::ostream &os, const DSString &str) {
     return os;
 }
 
+// Check if the word is a stopword
+bool DSString::isStopword() const {
+
+    // List of stopwords
+    const char *stopwords[] = {"i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "u", "r", "your", "yours", "yourself", "yourselves",
+    "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their",
+    "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "a", "an", "the", "and", 
+    "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "between",
+    "into", "through", "during", "before", "after", "to", "from", "up", "in", "out","over", "under", "again", "further", "then", "once", 
+    "here", "there", "theres", "when", "where", "why", "how", "all", "any", "both", "each", "more", "most", "other", "some", "such", 
+    "only", "own", "same", "so", "do", "am", "has", "than", "too", "very","can", "will", "just", "should", "now"};
+
+    // Convert the current word to lowercase
+    DSString lowercaseWord = this->toLower();
+
+    // Check if the word is in the stopwords list
+    for (size_t i = 0; i < sizeof(stopwords) / sizeof(stopwords[0]); ++i) {
+        if (lowercaseWord == stopwords[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<DSString> DSString::tokenize() {
     std::vector<DSString> tokens;
 
@@ -171,17 +196,20 @@ std::vector<DSString> DSString::tokenize() {
         if ((c >= 'a' && c <= 'z') || c == ' ') {
             // if there is a space and the word isn't empty insert the new word into tokens
             if (c == ' ' && !word.isEmpty()) {
-                tokens.push_back(word);
+                // Check if the word is not a stopword
+                if (!word.isStopword()) {
+                    tokens.push_back(word);
+                }
                 word = "";
-                // else add the character to the current word
+            // else add the character to the current word
             } else {
                 DSString temp = DSString(&c);
-                word = word + temp.substring(0,1);
+                word = word + temp.substring(0, 1);
             }
         }
     }
     // if there is a word by the end of the tweet then tokenize it
-    if (!word.isEmpty()) {
+    if (!word.isEmpty() && !word.isStopword()) {
         tokens.push_back(word);
     }
 

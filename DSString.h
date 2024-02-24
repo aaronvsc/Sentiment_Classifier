@@ -82,6 +82,8 @@ class DSString {
 
     std::vector<DSString> tokenize();
 
+    bool isStopword() const;
+
 
     // a conversion to std::string would also be nice: string string() const;
 

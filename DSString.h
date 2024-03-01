@@ -8,15 +8,14 @@
 #ifndef DSSTRING_H
 #define DSSTRING_H
 
-#include <vector>
 #include <iostream>
-
+#include <vector>
 
 class DSString {
    private:
     char *data;  // a pointer to a character array containing the string with a `\0` terminator
     size_t len;  // the length of the string (without the terminator)
-    // Note: we keep the terminator only so we can return a c-string version in function c_str().
+                 // Note: we keep the terminator only so we can return a c-string version in function c_str().
 
    public:
     /**
@@ -74,9 +73,8 @@ class DSString {
      * contents of this object. Since data already has a `\0`
      * at the end of the string in DSString so you can just return a pointer to data.
      **/
-    
-    char *c_str() const;
 
+    char *c_str() const;
 
     bool isEmpty() const;
 
@@ -84,8 +82,8 @@ class DSString {
 
     bool isStopword() const;
 
-
-    // a conversion to std::string would also be nice: string string() const;
+    // Overloaded + operator for adding a char to a DSString
+    DSString operator+(const char &rhs) const;
 
     /**
      * Overloaded stream insertion operator to print the contents of this

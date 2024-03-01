@@ -10,30 +10,30 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
         return;
     }
 
-    std::string line;
-    std::getline(train, line);  // Skip the header line
+    DSString line;
+    line.getLine(train, '\n');  // Skip the header line
 
     // Read the rest of the file
-    while (std::getline(train, line)) {
-        std::istringstream trainStream(line);
-        std::string token;
+    while (line.getLine(train, '\n')) {
+        std::istringstream trainStream(line.c_str());
+        DSString element;
 
         // Read the sentiment
-        std::getline(trainStream, token, ',');
-        int sentiment = std::stoi(token);
+        element.getLine(trainStream, ',');
+        auto str = element.toString();
+        int sentiment = std::stoi(str);
 
         // Skip the tweet id, date, query status, and username
         for (int i = 0; i < 3; ++i) {
-            std::getline(trainStream, token, ',');
+            element.getLine(trainStream, ',');
         }
 
-
         // Read the tweet text (everything after the comma)
-        std::getline(trainStream, token);
-        DSString tweetText(token.c_str());
+        element.getLine(trainStream, '\n');
 
         // Create a Tweet object
-        Tweet tweet(DSString(""), tweetText, sentiment);
+        Tweet tweet("", element);
+        tweet.setSentiment(sentiment);
 
         // Tokenize the tweet text
         std::vector<DSString> tokens = tweet.tokenizeTweet();

@@ -160,15 +160,14 @@ std::ostream &operator<<(std::ostream &os, const DSString &str) {
 
 // Check if the word is a stopword
 bool DSString::isStopword() const {
-
     // List of stopwords
     const char *stopwords[] = {"i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "u", "r", "your", "yours", "yourself", "yourselves",
-    "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their",
-    "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "a", "an", "the", "and", 
-    "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "between",
-    "into", "through", "during", "before", "after", "to", "from", "up", "in", "out","over", "under", "again", "further", "then", "once", 
-    "here", "there", "theres", "when", "where", "why", "how", "all", "any", "both", "each", "more", "most", "other", "some", "such", 
-    "only", "own", "same", "so", "do", "am", "has", "than", "too", "very","can", "will", "just", "should", "now"};
+                               "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their",
+                               "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "a", "an", "the", "and",
+                               "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "between",
+                               "into", "through", "during", "before", "after", "to", "from", "up", "in", "out", "over", "under", "again", "further", "then", "once",
+                               "here", "there", "theres", "when", "where", "why", "how", "all", "any", "both", "each", "more", "most", "other", "some", "such",
+                               "only", "own", "same", "so", "do", "am", "has", "was", "is", "than", "too", "very", "can", "will", "just", "should", "now"};
 
     // Convert the current word to lowercase
     DSString lowercaseWord = this->toLower();
@@ -201,7 +200,7 @@ std::vector<DSString> DSString::tokenize() {
                     tokens.push_back(word);
                 }
                 word = "";
-            // else add the character to the current word
+                // else add the character to the current word
             } else {
                 DSString temp = DSString(&c);
                 word = word + temp.substring(0, 1);
@@ -214,6 +213,27 @@ std::vector<DSString> DSString::tokenize() {
     }
 
     return tokens;
+}
+
+DSString DSString::operator+(const char &rhs) const {
+    // Make new length for the char 
+    size_t newLen = len + 1;
+
+    // Create a new DSString to hold the result
+    DSString result;
+    result.len = newLen;
+    result.data = new char[newLen + 1];
+
+    // Copy data from the left-hand side
+    for (size_t i = 0; i < len; ++i) {
+        result.data[i] = data[i];
+    }
+
+    // Add the character to the end
+    result.data[len] = rhs;
+
+    result.data[newLen] = '\0';  // Add null terminator after
+    return result;
 }
 
 /*

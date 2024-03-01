@@ -3,14 +3,10 @@
 
 #include "DSString.h"
 #include "Tweet.h"
-#include <iostream>
-#include <vector>
 #include <map>
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <iomanip>
-#include <filesystem>
 
 
 class SentimentClassifier{

@@ -1,6 +1,3 @@
-#include <iostream>
-
-#include "DSString.h"
 #include "SentimentClassifier.h"
 
 int main(int argc, char** argv) {

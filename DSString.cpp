@@ -1,7 +1,5 @@
 #include "DSString.h"
 
-#include <iostream>
-#include <vector>
 
 // Constructor: initialize locals w/ values
 DSString::DSString() {
@@ -244,6 +242,15 @@ std::istream& DSString::getLine(std::istream &is, char delim) {
         *this = *this + c;  // + character to the DSString
     }
     return is;  // Return the input stream reference
+}
+
+std::string DSString::toString() const {
+    // Create a std::string object and copy the characters from DSString
+    std::string result;
+    for (size_t i = 0; i < length(); ++i) {
+        result += data[i];
+    }
+    return result;
 }
 
 /*

@@ -18,11 +18,13 @@ set(CMAKE_CXX_STANDARD 17)
 set (input01 "data/train_dataset_20k.csv")
 set (input02 "data/test_dataset_10k.csv")
 set (input03 "data/test_dataset_sentiment_10k.csv")
+set (input04 "data/results.csv")
+set (input05 "data/accuracy.txt")
 
 ##########################################
 
 # Copy data files to build dir
-foreach(file IN LISTS input01 input02 input03)
+foreach(file IN LISTS input01 input02 input03 input04 input05)
     configure_file(${file} ${file} COPYONLY)
 endforeach()
 
@@ -31,7 +33,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 add_compile_options(-Wall -Wextra -pedantic)
 
 # Create the executable (s)
-add_executable(sentiment main.cpp DSString.cpp SentimentClassifier.cpp)
+add_executable(sentiment main.cpp DSString.cpp SentimentClassifier.cpp Tweet.cpp)
 
 add_executable(test_DSString test_DSString.cpp DSString.cpp)
 

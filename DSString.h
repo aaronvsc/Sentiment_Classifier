@@ -88,6 +88,12 @@ class DSString {
     // Custom getLine function for DSStrings
     std::istream& getLine(std::istream &is, char delim);
 
+    // a conversion to std::string would also be nice: string string() const;
+    std::string toString() const;
+    
+
+
+
     /**
      * Overloaded stream insertion operator to print the contents of this
      * string to the output stream in the first argument. Remember:

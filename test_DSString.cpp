@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 #include "DSString.h"
 
@@ -8,11 +9,25 @@
 
 int main()
 {  
-    DSString myString = "Hello, World!";
+    DSString myString = "The in Hello, World!";
 
-    std::cout << myString << "\n";
+    DSString str;
 
-    std::vector<DSString> tokens = myString.tokenize(myString);
+    // Input stream containing the line you want to read
+    std::istringstream input("Hello, world!");
+
+    // Declare a DSString object to store the line
+    DSString line;
+
+    // Call the custom getline function to read the line
+    line.getLine(input, ',');
+
+    // Output the line
+    std::cout << "Line read: " << line << std::endl;
+
+
+    std::vector<DSString> tokens = myString.tokenize();
+    
 
     //std::cout << myString << "\n";
 

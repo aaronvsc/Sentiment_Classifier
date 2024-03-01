@@ -11,7 +11,8 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
     }
 
     DSString line;
-    line.getLine(train, '\n');  // Skip the header line
+    // Skip the header line
+    line.getLine(train, '\n');
 
     // Read the rest of the file
     while (line.getLine(train, '\n')) {
@@ -51,28 +52,22 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
     train.close();
 }
 
-// finds sentiment of word in map
 int SentimentClassifier::findSentiment(const DSString& word) const {
     auto a = sentimentsOfWords.find(word);
     if (a != sentimentsOfWords.end()) {
-        return a->second;  // returns element at key
+        return a->second;  // Returns element at key
     } else {
-        return 0;  // assuming sentiment of 0 for words not found
+        return 0;  // Assuming sentiment of 0 for words not found
     }
 }
 
 void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
-    // Open the test dataset file
     std::ifstream test(test_dataset_10k);
-    if (!test.is_open()) {
-        std::cerr << "Error: Cannot open test dataset file " << test_dataset_10k << std::endl;
-        return;
-    }
-
-    // Open the results file for writing
     std::ofstream result(results);
-    if (!result.is_open()) {
-        std::cerr << "Error: Cannot open results file " << results << std::endl;
+
+    // Check if files are open
+    if (!result.is_open() || !test.is_open()) {
+        std::cerr << "Error: Cannot open files" << results << std::endl;
         return;
     }
 
@@ -132,6 +127,7 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
     std::ofstream newAccuracy("new.txt");
     std::ifstream accuracyif(accuracy);
 
+    // Check if files are open
     if (!truth.is_open() || !result.is_open() || !accuracyof.is_open()) {
         std::cerr << "Error: Cannot open files" << std::endl;
         return;
@@ -162,6 +158,7 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
         str = element.toString();
         groundTruthSentiment = std::stoi(str);
 
+        // Extract tweetID from results file
         DSString tweetID;
         tweetID.getLine(resultStream, ',');
 

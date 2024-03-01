@@ -63,45 +63,40 @@ int SentimentClassifier::findSentiment(const DSString& word) const {
 
 void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
     // Open the test dataset file
-    std::ifstream testDataFile(test_dataset_10k);
-    if (!testDataFile.is_open()) {
+    std::ifstream test(test_dataset_10k);
+    if (!test.is_open()) {
         std::cerr << "Error: Cannot open test dataset file " << test_dataset_10k << std::endl;
         return;
     }
 
     // Open the results file for writing
-    std::ofstream resultsFile(results);
-    if (!resultsFile.is_open()) {
+    std::ofstream result(results);
+    if (!result.is_open()) {
         std::cerr << "Error: Cannot open results file " << results << std::endl;
         return;
     }
 
     // Skip the first line of file
-    std::string skipLine;
-    std::getline(testDataFile, skipLine);
+    DSString skipLine;
+    skipLine.getLine(test, '\n');
 
     // Process each tweet in the test dataset
-    std::string testLine;
-    std::string sentimentLine;
-    while (std::getline(testDataFile, testLine)) {
-        std::istringstream tweetStream(testLine);
+    DSString testLine;
+    while (testLine.getLine(test, '\n')) {
+        std::istringstream tweetStream(testLine.c_str());
 
         // Extract tweet ID
-        std::string stringID;
-        std::getline(tweetStream, stringID, ',');
+        DSString tweetID;
+        tweetID.getLine(tweetStream, ',');
 
         // Skip the date, query status, and username
         for (int i = 0; i < 3; ++i) {
-            std::getline(tweetStream, skipLine, ',');
+            skipLine.getLine(tweetStream,',');
         }
 
         // Extract tweet text
-        std::string stringText;
-        std::getline(tweetStream, stringText);
-
-        // Convert tweetID and tweetText to DSStrings
-        DSString tweetID(stringID.c_str());
-        DSString tweetText(stringText.c_str());
+        DSString tweetText;
+        tweetText.getLine(tweetStream , '\n');
 
         // Create a Tweet object
         Tweet currTweet(tweetID, tweetText);
@@ -123,12 +118,12 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
         }
 
         // Write the sentiment label and tweet ID to the results file
-        resultsFile << currTweet.getSentiment() << "," << currTweet.getTweetID() << std::endl;
+        result << currTweet.getSentiment() << "," << currTweet.getTweetID() << std::endl;
     }
 
     // Close the files
-    testDataFile.close();
-    resultsFile.close();
+    test.close();
+    result.close();
 }
 
 void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* results, char* accuracy) {

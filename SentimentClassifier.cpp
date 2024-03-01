@@ -77,13 +77,12 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
     }
 
     // Skip the first line of file
-    DSString skipLine;
-    skipLine.getLine(test, '\n');
+    DSString line;
+    line.getLine(test, '\n');
 
     // Process each tweet in the test dataset
-    DSString testLine;
-    while (testLine.getLine(test, '\n')) {
-        std::istringstream tweetStream(testLine.c_str());
+    while (line.getLine(test, '\n')) {
+        std::istringstream tweetStream(line.c_str());
 
         // Extract tweet ID
         DSString tweetID;
@@ -91,12 +90,12 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
 
         // Skip the date, query status, and username
         for (int i = 0; i < 3; ++i) {
-            skipLine.getLine(tweetStream,',');
+            line.getLine(tweetStream, ',');
         }
 
         // Extract tweet text
         DSString tweetText;
-        tweetText.getLine(tweetStream , '\n');
+        tweetText.getLine(tweetStream, '\n');
 
         // Create a Tweet object
         Tweet currTweet(tweetID, tweetText);
@@ -127,48 +126,49 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
 }
 
 void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* results, char* accuracy) {
-    std::ifstream truthFile(test_dataset_sentiment_10k);
-    std::ifstream resultFile(results);
-    std::ofstream accuracyFile(accuracy);
+    std::ifstream truth(test_dataset_sentiment_10k);
+    std::ifstream result(results);
+    std::ofstream accuracyof(accuracy);
 
-    if (!truthFile.is_open() || !resultFile.is_open() || !accuracyFile.is_open()) {
+    if (!truth.is_open() || !result.is_open() || !accuracyof.is_open()) {
         std::cerr << "Error: Cannot open files" << std::endl;
         return;
     }
 
-    // Skip the first line of each file
-    std::string truthLine, resultsLine;
-    std::getline(truthFile, truthLine);
+    DSString truthLine;
+    DSString resultLine;
+    // Skip the first line of truth file
+    truthLine.getLine(truth, '\n');
 
     int totalTweets = 0;
     int correctPredictions = 0;
 
     // Process the rest of the files
-    while (std::getline(truthFile, truthLine) && std::getline(resultFile, resultsLine)) {
+    while (truthLine.getLine(truth, '\n') && resultLine.getLine(result, '\n')) {
+        DSString element;
         // Extract predicted sentiment from results file
         int predictedSentiment;
-        std::istringstream resultStream(resultsLine);
-        std::string token;
-        std::getline(resultStream, token, ',');
-        predictedSentiment = std::stoi(token);
+        std::istringstream resultStream(resultLine.c_str());
+        element.getLine(resultStream, ',');
+        auto str = element.toString();
+        predictedSentiment = std::stoi(str);
 
         // Extract ground truth sentiment from ground truth file
         int groundTruthSentiment;
-        std::istringstream truthStream(truthLine);
-        std::getline(truthStream, token, ',');
-        groundTruthSentiment = std::stoi(token);
+        std::istringstream truthStream(truthLine.c_str());
+        element.getLine(truthStream,',');
+        str = element.toString();
+        groundTruthSentiment = std::stoi(str);
 
         DSString tweetID;
-        std::string tweetIDString;
-        std::getline(resultStream, tweetIDString, ',');
-        tweetID = DSString(tweetIDString.c_str());
+        tweetID.getLine(resultStream, ',');
 
         // Check if prediction matches ground truth
         if (predictedSentiment == groundTruthSentiment) {
             correctPredictions++;
         } else {
             // Write incorrectly classified tweet to accuracy file
-            accuracyFile << predictedSentiment << ", " << groundTruthSentiment << ", " << tweetID << std::endl;
+            accuracyof << predictedSentiment << ", " << groundTruthSentiment << ", " << tweetID << std::endl;
         }
 
         totalTweets++;
@@ -178,10 +178,10 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
     double accuracyDecimal = (static_cast<double>(correctPredictions) / totalTweets);
 
     // Write accuracy to accuracy file
-    accuracyFile << std::fixed << std::setprecision(2) << accuracyDecimal << std::endl;
+    accuracyof << std::fixed << std::setprecision(3) << accuracyDecimal << std::endl;
 
     // Close the files
-    truthFile.close();
-    resultFile.close();
-    accuracyFile.close();
+    truth.close();
+    result.close();
+    accuracyof.close();
 }

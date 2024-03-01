@@ -2,13 +2,13 @@
 
 **Complete this document, commit your changes to Github and submit the repository URL to Canvas.** Keep your answers short and precise.
 
-Your Name:
+Your Name: Aaron Santa Cruz
 
 Used free extension: [ ] 24 hrs or [ ] 48 hrs
 
-[ ] Early submission (48 hrs)
+[x] Early submission (48 hrs)
 
-[ ] Bonus work. Describe: ...
+[x] Bonus work. Describe: I implemented a stopword function into my tokenization process to ignore common stopwords.
 
 Place [x] for what applies.
 
@@ -24,31 +24,31 @@ Replace the following image with your diagram. You can draw it by hand and take 
 
 1. How do you train the model and how do you classify a new tweet? Give a short description of the main steps.
 
-    > Your answer
+    > The approach I took to training my Sentiment Classifier was centered around the use of a map. My sentimentOfWords map was composed of a DSString word key and an int sentiment value. To populate my map with the correct words and corresponding sentiments, I first tokenized the tweets in the training data set. I then added each word to my map and either incremented or decremented by 1, depending on what the given sentiment of the tweet was. After I did this for all my tweets, I effectively obtained a map that could be used to classify tweets, where I could look up individual words in a tweet and find the sum of the individual sentiments to determine the overall sentiment of the tweet.
 
 2. How long did your code take for training and what is the time complexity of your training implementation (Big-Oh notation)? Remember that training includes reading the tweets, breaking it into words, counting, ... Explain why you get this complexity (e.g., what does `N` stand for and how do your data structures/algorithms affect the complexity).
 
-   > Your answer
+   > The training algorithm is O(N). Reading each tweet takes O(N), the tokenize function uses only 1 for loop through N elements taking O(N) as well, and updating the sentiments for each word in the map also takes O(N). Therefore, the total time complexity is just O(N) + O(N) + O(N) = O(N)
 
 3. How long did your code take for classification and what is the time complexity of your classification implementation (Big-Oh notation)? Explain why.
 
-   > Your answer
+   > The classification algorithm is O(N) as well. Reading each tweet takes O(N), tokenizing each tweet takes O(N) again, finding the sentiment for each token using the map takes O(N), and calculating the combined sentiment of the tweet itself takes O(N). At the end, the tweet sentiment is also updated O(1). The highest complexity is O(N).
 
 4. What accuracy did your algorithm achieve on the provides training and test data? 
 
-   > My accuracy: xx%
+   > My accuracy: 66.9%
 
    The TA will run your code on Linux and that accuracy value will be used to determine your grade.
 
 5. What were the changes that you made that improved the accuracy the most?
    
-   > Your answer
+   > Initially, my accuracy was around 57% by implementing my map successfully. A big change that helped my accuracy was a stopword function. My stopword function checked if a particular token was a stopword (her, him, our, etc) and was used to ignore them in the tokenziation process. In doing so, my accuracy shot up close to around 10 percentage points. 
 
 6. How do you know that you use proper memory management? I.e., how do you know that you do not have
    a memory leak?
 
-   > Your answer
+   > I used valgrind to test my sentiment and test_DSString executables and found that all allocations were freed from the heap.
 
 6. What was the most challenging part of the assignment?
 
-   > Your answer
+   > The most challenging aspect of this assignment was finding a way around utilizing strings. For example, I remember my first instinct was to read the lines from files as strings and convert them to DSStrings. However, I had to find a way around using the string library. I created my own custom getLine function and called it on a DSString object. File handling was tricky, especially with larger data sets than I was used to. Keeping track of what was being read, outputted, and written required a lot of thought. Additionally, the debugging process was tedious. I always found myself spending time with the edge cases and trying to figure work my way backwards from there to identify the problem.

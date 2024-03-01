@@ -82,7 +82,7 @@ DSString DSString::operator+(const DSString &rhs) const {
         combined.data[i] = rhs.data[j];
     }
 
-    combined.data[combined.len] = '/0';
+    combined.data[combined.len] = '\0';
     return combined;
 }
 

@@ -216,7 +216,7 @@ std::vector<DSString> DSString::tokenize() {
 }
 
 DSString DSString::operator+(const char &rhs) const {
-    // Make new length for the char 
+    // Make new length for the char
     size_t newLen = len + 1;
 
     // Create a new DSString to hold the result
@@ -234,6 +234,16 @@ DSString DSString::operator+(const char &rhs) const {
 
     result.data[newLen] = '\0';  // Add null terminator after
     return result;
+}
+
+// Read a line from the input stream until a specific char is found
+std::istream& DSString::getLine(std::istream &is, char delim) {
+    *this = "";  // Clear the existing content of the DSString
+    char c;
+    while (is.get(c) && c != delim) {
+        *this = *this + c;  // + character to the DSString
+    }
+    return is;  // Return the input stream reference
 }
 
 /*

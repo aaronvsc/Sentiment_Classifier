@@ -85,6 +85,9 @@ class DSString {
     // Overloaded + operator for adding a char to a DSString
     DSString operator+(const char &rhs) const;
 
+    // Custom getLine function for DSStrings
+    std::istream& getLine(std::istream &is, char delim);
+
     /**
      * Overloaded stream insertion operator to print the contents of this
      * string to the output stream in the first argument. Remember:

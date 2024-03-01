@@ -129,6 +129,8 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
     std::ifstream truth(test_dataset_sentiment_10k);
     std::ifstream result(results);
     std::ofstream accuracyof(accuracy);
+    std::ofstream newAccuracy("new.txt");
+    std::ifstream accuracyif(accuracy);
 
     if (!truth.is_open() || !result.is_open() || !accuracyof.is_open()) {
         std::cerr << "Error: Cannot open files" << std::endl;
@@ -156,7 +158,7 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
         // Extract ground truth sentiment from ground truth file
         int groundTruthSentiment;
         std::istringstream truthStream(truthLine.c_str());
-        element.getLine(truthStream,',');
+        element.getLine(truthStream, ',');
         str = element.toString();
         groundTruthSentiment = std::stoi(str);
 
@@ -176,12 +178,23 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
 
     // Calculate accuracy
     double accuracyDecimal = (static_cast<double>(correctPredictions) / totalTweets);
+    ;
 
-    // Write accuracy to accuracy file
-    accuracyof << std::fixed << std::setprecision(3) << accuracyDecimal << std::endl;
+    // Write accuracy to top of new file
+    newAccuracy << std::fixed << std::setprecision(3) << accuracyDecimal << std::endl;
+
+    DSString accuracyLine;
+    while (accuracyLine.getLine(accuracyif, '\n')) {
+        // Write the entire line to the output file
+        newAccuracy << accuracyLine << std::endl;
+    }
 
     // Close the files
     truth.close();
     result.close();
     accuracyof.close();
+    newAccuracy.close();
+
+    // Rename temporary file to replace the original accuracy file
+    std::rename("new.txt", accuracy);
 }

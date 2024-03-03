@@ -6,7 +6,7 @@ Your Name: Aaron Santa Cruz
 
 Used free extension: [ ] 24 hrs or [ ] 48 hrs
 
-[x] Early submission (48 hrs)
+[] Early submission (48 hrs)
 
 [x] Bonus work. Describe: I implemented a stopword function into my tokenization process to ignore common stopwords.
 
@@ -28,11 +28,11 @@ Replace the following image with your diagram. You can draw it by hand and take 
 
 2. How long did your code take for training and what is the time complexity of your training implementation (Big-Oh notation)? Remember that training includes reading the tweets, breaking it into words, counting, ... Explain why you get this complexity (e.g., what does `N` stand for and how do your data structures/algorithms affect the complexity).
 
-   > The training algorithm is O(N). Reading each tweet takes O(N), the tokenize function uses only 1 for loop through N elements taking O(N) as well, and updating the sentiments for each word in the map also takes O(N). Therefore, the total time complexity is just O(N) + O(N) + O(N) = O(N)
+   > The training algorithm is O(L*C*W^2*log(N)). Reading each line from the file takes O(L), where L is the number of lines. I tokenize all of those characters, O(C), and also check whether or not the tokenized words are stopwords, O(W). Lastly, I put O(W) words into my map and update the sentiment of the word,log(N). Multiplying these all together yields O(L*C*W^2*log(N)). My run time for the training algorithm was 1.95406 seconds.
 
 3. How long did your code take for classification and what is the time complexity of your classification implementation (Big-Oh notation)? Explain why.
 
-   > The classification algorithm is O(N) as well. Reading each tweet takes O(N), tokenizing each tweet takes O(N) again, finding the sentiment for each token using the map takes O(N), and calculating the combined sentiment of the tweet itself takes O(N). At the end, the tweet sentiment is also updated O(1). The highest complexity is O(N).
+   > The classification algorithm is also O(L*C*W^2*log(N)). Reading and writing each line from the file takes O(L), where L is the number of lines. I tokenize all of those characters, O(C), and also check whether or not the tokenized words are stopwords, O(W). Lastly, I find and sum the sentiment of O(W) words in my map, where finding the sentiment of each word takes log(N). Multiplying these all together yields O(L*C*W^2*log(N)). My run time for the classification algorithm was 1.17922 seconds. 
 
 4. What accuracy did your algorithm achieve on the provides training and test data? 
 

@@ -16,25 +16,21 @@ void SentimentClassifier::train(const char* train_dataset_20k) {
 
     // Read the rest of the file
     while (line.getLine(train, '\n')) {
-        std::istringstream trainStream(line.c_str());
         DSString element;
 
         // Read the sentiment
-        element.getLine(trainStream, ',');
-        auto str = element.toString();
-        int sentiment = std::stoi(str);
+        size_t pos = line.find(',', 1);
+        element = line.substring(0, pos);
+        int sentiment = std::stoi(element.toString());
 
-        // Skip the tweet id, date, query status, and username
-        for (int i = 0; i < 3; ++i) {
-            element.getLine(trainStream, ',');
-        }
+        // Skip the ID, date, query status, and username
+        pos = line.find(',', 5);
 
         // Read the tweet text (everything after the comma)
-        element.getLine(trainStream, '\n');
+        element = line.substring(pos + 1, line.length() - pos - 1);
 
         // Create a Tweet object
-        Tweet tweet("", element);
-        tweet.setSentiment(sentiment);
+        Tweet tweet("", element, sentiment);
 
         // Tokenize the tweet text
         std::vector<DSString> tokens = tweet.tokenizeTweet();
@@ -77,20 +73,16 @@ void SentimentClassifier::predict(char* test_dataset_10k, char* results) {
 
     // Process each tweet in the test dataset
     while (line.getLine(test, '\n')) {
-        std::istringstream tweetStream(line.c_str());
-
         // Extract tweet ID
         DSString tweetID;
-        tweetID.getLine(tweetStream, ',');
+        size_t pos = line.find(',', 1);
+        tweetID = line.substring(0, pos);
 
         // Skip the date, query status, and username
-        for (int i = 0; i < 3; ++i) {
-            line.getLine(tweetStream, ',');
-        }
+        pos = line.find(',', 4);
 
         // Extract tweet text
-        DSString tweetText;
-        tweetText.getLine(tweetStream, '\n');
+        DSString tweetText = line.substring(pos + 1, line.length() - pos - 1);
 
         // Create a Tweet object
         Tweet currTweet(tweetID, tweetText);
@@ -144,23 +136,17 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
     // Process the rest of the files
     while (truthLine.getLine(truth, '\n') && resultLine.getLine(result, '\n')) {
         DSString element;
+
         // Extract predicted sentiment from results file
-        int predictedSentiment;
-        std::istringstream resultStream(resultLine.c_str());
-        element.getLine(resultStream, ',');
-        auto str = element.toString();
-        predictedSentiment = std::stoi(str);
+        element = resultLine.substring(0, resultLine.find(',', 1));
+        int predictedSentiment = std::stoi(element.toString());
 
         // Extract ground truth sentiment from ground truth file
-        int groundTruthSentiment;
-        std::istringstream truthStream(truthLine.c_str());
-        element.getLine(truthStream, ',');
-        str = element.toString();
-        groundTruthSentiment = std::stoi(str);
+        element = truthLine.substring(0, truthLine.find(',', 1));
+        int groundTruthSentiment = std::stoi(element.toString());
 
         // Extract tweetID from results file
-        DSString tweetID;
-        tweetID.getLine(resultStream, ',');
+        DSString tweetID = resultLine.substring(resultLine.find(',', 1), resultLine.length() - 1);  // Skip the first comma
 
         // Check if prediction matches ground truth
         if (predictedSentiment == groundTruthSentiment) {
@@ -175,7 +161,6 @@ void SentimentClassifier::evaluate(char* test_dataset_sentiment_10k, char* resul
 
     // Calculate accuracy
     double accuracyDecimal = (static_cast<double>(correctPredictions) / totalTweets);
-    ;
 
     // Write accuracy to top of new file
     newAccuracy << std::fixed << std::setprecision(3) << accuracyDecimal << std::endl;

@@ -46,6 +46,8 @@ class DSString {
 
     std::string toString() const;  // Conversion to std::string
 
+    size_t find(char c, size_t n) const;  // Finds a character of nth occurance and returns the index
+
     friend std::ostream &operator<<(std::ostream &, const DSString &);  // Overloaded stream insertion operator to print
 };
 

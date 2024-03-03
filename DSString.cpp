@@ -162,8 +162,7 @@ std::vector<DSString> DSString::tokenize() {
                 word = "";
                 // Else add the character to the current word
             } else {
-                DSString temp = DSString(&c);
-                word = word + temp.substring(0, 1);
+                word = word + c;
             }
         }
     }
@@ -189,8 +188,8 @@ bool DSString::isStopword() const {
     DSString lowercaseWord = this->toLower();
 
     // Check if the word is in the stopwords list
-    for (size_t i = 0; i < sizeof(stopwords) / sizeof(stopwords[0]); ++i) {
-        if (lowercaseWord == stopwords[i]) {
+    for (const auto &stopword : stopwords) {
+        if (lowercaseWord == stopword) {
             return true;
         }
     }
@@ -234,6 +233,21 @@ std::string DSString::toString() const {
         result += data[i];
     }
     return result;
+}
+
+size_t DSString::find(char c, size_t n) const {
+    size_t count = 0;
+    // Checks all chars and increments count when matching char
+    for (size_t i = 0; i < len; ++i) {
+        if (data[i] == c) {
+            count++;
+            // Returns index of nth matching char
+            if (count == n) {
+                return i;
+            }
+        }
+    }
+    return 0;  // Not found
 }
 
 std::ostream &operator<<(std::ostream &os, const DSString &str) {

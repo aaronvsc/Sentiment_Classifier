@@ -109,11 +109,12 @@ DSString DSString::substring(size_t start, size_t numChars) const {
     numChars = std::min(numChars, len - start);  // Ensure range
     DSString sub;
     sub.len = numChars;
-    sub.data = new char[numChars];  // Not accounting for null terminator
+    sub.data = new char[numChars+1];  // Accounting for null terminator
     // Copies from starting index
     for (size_t i = 0; i < numChars; i++) {
         sub.data[i] = data[start + i];
     }
+    sub.data[numChars] = '\0'; // Add null terminator
     return sub;
 }
 

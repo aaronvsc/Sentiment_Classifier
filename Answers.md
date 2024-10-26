@@ -1,23 +1,5 @@
-# Assignment 2: Answers
-
-**Complete this document, commit your changes to Github and submit the repository URL to Canvas.** Keep your answers short and precise.
-
-Your Name: Aaron Santa Cruz
-
-Used free extension: [ ] 24 hrs or [ ] 48 hrs
-
-[] Early submission (48 hrs)
-
-[x] Bonus work. Describe: I implemented a stopword function into my tokenization process to ignore common stopwords.
-
-Place [x] for what applies.
-
-
 ## UML Diagram
 
-Add your UML class diagram here.
-
-Replace the following image with your diagram. You can draw it by hand and take a photo.
 ![UML Class Diagram](UML_class.png)
 
 ## Answers
@@ -51,4 +33,4 @@ Replace the following image with your diagram. You can draw it by hand and take 
 
 6. What was the most challenging part of the assignment?
 
-   > The most challenging aspect of this assignment was finding a way around utilizing strings. For example, I remember my first instinct was to read the lines from files as strings and convert them to DSStrings. However, I had to find a way around using the string library. I created my own custom getLine function and called it on a DSString object. File handling was tricky, especially with larger data sets than I was used to. Keeping track of what was being read, outputted, and written required a lot of thought. Additionally, the debugging process was tedious. I always found myself spending time with the edge cases and trying to figure work my way backwards from there to identify the problem.
+   > The most challenging aspect of this assignment was finding a way around utilizing strings. For example, I remember my first instinct was to read the lines from files as strings and convert them to DSStrings. However, I had to find a way around using the string library. I created my own custom getLine function and called it on a DSString object. File handling was tricky, especially with larger data sets than I was used to. Keeping track of what was being read, outputted, and written required a lot of thought. Additionally, the debugging process was tedious. I always found myself spending time with the edge cases and trying to work my way backwards from there to identify the problem.
